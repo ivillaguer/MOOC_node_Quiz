@@ -4,10 +4,14 @@ var router = express.Router();
 var quizController = require('../controllers/quiz_controller');
 var creditsController = require('../controllers/credits_controller');
 
+
 /* GET home page. */
 router.get('/', function(req, res) {
   res.render('index', { title: 'Quiz' });
 });
+
+// Autoload de comandos con :quizId
+router.param('quizId', quizController.load);  // autoload :quizId
 
 // Definición de rutas de /quizes
 router.get('/quizes',                      quizController.index);
