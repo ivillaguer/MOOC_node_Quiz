@@ -34,3 +34,25 @@ exports.answer = function(req, res) {
   }
   res.render('quizes/answer', {quiz: req.quiz, respuesta: resultado});
 };
+
+//GET /quizes/search
+exports.buscar = function(req, res) {	
+	if( (req.query.search === undefined) || 
+		(req.query.search.length === 0 ) ) {
+		res.render('quizes/index', {quizes: 0});		
+	} else {
+		 // Sustituir blancos intercalados por carácteres comodín SQL "%"
+		string = req.query.search.trim();
+		string = string.replace(/\s+/g, ' ');
+		string = string.replace(/\s/g, '%');
+		string = '%' + string + '%';
+	 // Buscar las preguntas que conengan las palabras seleccionads
+	 // presentando el resultado en modo ascendente
+		models.Quiz.findAll({ where: [ "pregunta like ?", string ]
+							, order: [[ 'pregunta', 'ASC' ]] } )
+			.then( function(quizes) {
+			 // Mostrar la lista de preguntas según el criterio de búsqueda
+				res.render('quizes/index', { quizes: quizes });    				
+		}).catch(function(error) { next(error);})		
+	} 
+};
