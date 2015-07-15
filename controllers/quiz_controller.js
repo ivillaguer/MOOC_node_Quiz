@@ -16,14 +16,14 @@ exports.load = function(req, res, next, quizId) {
 exports.index = function(req, res) {
   models.Quiz.findAll().then(
     function(quizes) {
-      res.render('quizes/index', { quizes: quizes});
+      res.render('quizes/index', { quizes: quizes, errors: []});
     }
   ).catch(function(error) { next(error);})
 };
 
 // GET /quizes/:id
 exports.show = function(req, res) {
-  res.render('quizes/show', { quiz: req.quiz});
+  res.render('quizes/show', { quiz: req.quiz, errors: []});
 };
 
 // GET /quizes/:id/answer
@@ -32,14 +32,14 @@ exports.answer = function(req, res) {
   if (req.query.respuesta === req.quiz.respuesta) {
     resultado = 'Correcto';
   }
-  res.render('quizes/answer', {quiz: req.quiz, respuesta: resultado});
+  res.render('quizes/answer', {quiz: req.quiz, respuesta: resultado, errors: []});
 };
 
 //GET /quizes/search
 exports.buscar = function(req, res) {	
 	if( (req.query.search === undefined) || 
 		(req.query.search.length === 0 ) ) {
-		res.render('quizes/index', {quizes: 0});		
+		res.render('quizes/index', {quizes: 0, errors: []});		
 	} else {
 		 // Sustituir blancos intercalados por carácteres comodín SQL "%"
 		string = req.query.search.trim();
@@ -52,7 +52,7 @@ exports.buscar = function(req, res) {
 							, order: [[ 'pregunta', 'ASC' ]] } )
 			.then( function(quizes) {
 			 // Mostrar la lista de preguntas según el criterio de búsqueda
-				res.render('quizes/index', { quizes: quizes });    				
+				res.render('quizes/index', { quizes: quizes, errors: []});    				
 		}).catch(function(error) { next(error);})		
 	} 
 };
@@ -63,26 +63,21 @@ exports.new = function(req, res) {
     {pregunta: "Pregunta", respuesta: "Respuesta"}
   );
 
-  res.render('quizes/new', {quiz: quiz});
+  res.render('quizes/new', {quiz: quiz, errors: []});
 };
 
 // POST /quizes/create
 exports.create = function(req, res) {
-	if( (req.query.pregunta === undefined)  || 
-		(req.query.respuesta === undefined) || 
-		(req.query.pregunta.length === 0 )  ||
-		(req.query.respuesta.length === 0 )
-		) { 
-			console.log('Server passed by line #76 ....');
-			res.redirect('/quizes');		
-		} else {
-			console.log('New quiz added at line #79 ....');
-		}			
-		  var quiz = models.Quiz.build( req.body.quiz );
 		
+	var quiz = models.Quiz.build( req.body.quiz );
+
+	quiz.validate().then( function(err) { 
+		if (err) { 
+			res.render('quizes/new', {quiz: quiz, errors: err.errors}); 
+	  } else {
 		// guarda en DB los campos pregunta y respuesta de quiz
 		  quiz.save({fields: ["pregunta", "respuesta"]}).then(function(){
-		    res.redirect('/quizes');  
+		    res.redirect('/quizes');
 		  })   // res.redirect: Redirección HTTP a lista de preguntas
-
+	}});
 };
