@@ -1,6 +1,7 @@
   <table>
   <% var i; for (i=0; i < quizes.length; i++) { %>        
-     <tr><td><a href="/quizes/<%= quizes[i].id %>"><%= quizes[i].pregunta %></a></td></tr> 
+     <tr><td><a href="/quizes/<%= quizes[i].id %>"><%= quizes[i].pregunta %></a></td></tr>
+     <td><a href="quizes/<%= quizes[i].id %>/edit"><button>editar</button></a></td>
   <% } %>
   <% if (i===0) { %>
   	<tr><td><p>No se ha encontrado la cadena buscada</p></td></tr>

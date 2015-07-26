@@ -20,6 +20,8 @@ router.get('/quizes/:quizId(\\d+)/answer', quizController.answer);
 router.get('/quizes/search', quizController.buscar);
 router.get('/quizes/new', quizController.new);
 router.post('/quizes/create', quizController.create);
+router.get('/quizes/:quizId(\\d+)/edit',   quizController.edit);
+router.put('/quizes/:quizId(\\d+)',        quizController.update);
 router.get('/credits/author', creditsController.author);
 
 module.exports = router;
