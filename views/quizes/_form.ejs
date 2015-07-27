@@ -1,6 +1,24 @@
+ <% var select=["selected","","","",""];
+ 
+ if ( typeof quiz.tema !== 'undefined' )  {
+	 select[0] = (quiz.tema==="otro")?"selected":""; 
+	 select[1] = (quiz.tema==="humanidades")?"selected":""; 
+	 select[2] = (quiz.tema==="ocio")?"selected":""; 
+	 select[3] = (quiz.tema==="ciencia")?"selected":""; 
+	 select[4] = (quiz.tema==="tecnologia")?"selected":"";
+}; 
+%>
 <label for="preg" class="rem">Pregunta:</label>
-<input type="text" id="preg" name="quiz[pregunta]" value=""  placeholder="<%= quiz.pregunta %>" /> <p>
+<input type="text" id="preg" name="quiz[pregunta]" value="<%= quiz.pregunta %>"  placeholder="<%= quiz.pregunta %>" />
+  <select name="quiz[tema]" id="tema" value="<%= quiz.tema %>">
+	<option <%= select[0] %> value="otro">Otro</option>
+	<option <%= select[1] %> value="humanidades">Humanidades</option>
+	<option <%= select[2] %> value="ocio">Ocio</option>
+	<option <%= select[3] %> value="ciencia">Ciencia</option>
+	<option <%= select[4] %> value="tecnologia">Tecnología</option>
+</select>
+<p>
 <label for="resp" class="rem">Respuesta:</label>
-<input type="text" id="resp" name="quiz[respuesta]" value="" placeholder="<%= quiz.respuesta %>"/> <p>
+<input type="text" id="resp" name="quiz[respuesta]" value="<%= quiz.respuesta %>" placeholder="<%= quiz.respuesta %>"/> <p>
 <a href="/quizes"><button type="button">Cancelar</button></a>
 <input type="submit" value="Salvar">
